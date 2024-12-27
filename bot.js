@@ -1,20 +1,37 @@
-mkdir discord-bot
-cd discord-bot
-npm init -y
-npm install discord.js dotenv
-DISCORD_TOKEN = 'abcd'
+const express = require('express');
 require('dotenv').config();
-const { Client, GatewayIntentBits } = require('discord.js');
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+const colors = require("colors");
 
-client.once('ready', () => {
-    console.log('Bot is online!');
+const app = express();
+const port = 3000;
+app.get('/', (req, res) => res.send('Hello World!'));
+app.listen(port, () => console.log('\x1b[36m%s\x1b[0m', `|    🔗 Listening to RTX : ${port}`));
+
+const Discord = require('discord.js');
+const client = new Discord.Client();
+
+
+client.on('ready', () => {
+  console.log(`Logged in as ${client.user.tag}!`);
+});
+const { ActivityType } = require("discord.js");
+
+client.on('ready', () => {
+    client.user.setStatus('available')
+    client.user.setPresence({
+        game: {
+            name: 'SHIVA ',
+            type: "PLAYING",
+            url: "https://www.youtube.com/@winteryt2599"
+        }
+    });
+});
+client.on('message', message => {
+  if(message.content == "hi") {
+    message.channel.send("Hello!");
+  } else if (message.content == "Dead") {
+    message.channel.send("Thank God! Atleast You are Alive");
+  }
 });
 
-client.on('messageCreate', message => {
-    if (message.content === '!ping') {
-        message.channel.send('Pong!');
-    }
-});
-
-client.login
+client.login(process.env.token);
